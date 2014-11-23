@@ -15,8 +15,11 @@ entity msi_Test1 is
 		HEX0 : out std_logic_vector(6 downto 0);
 		HEX1 : out std_logic_vector(6 downto 0);
 		HEX2 : out std_logic_vector(6 downto 0);
-		HEX3 : out std_logic_vector(6 downto 0)
-		);
+		HEX3 : out std_logic_vector(6 downto 0);
+		
+		AUD_ADCDAT,	AUD_ADCLRCK, AUD_BCLK, AUD_DACDAT, AUD_DACLRCK,	AUD_XCK : out std_logic;
+		I2C_SCLK, I2C_SDAT : out std_logic
+	);
 end entity;
 
 architecture behaviour of msi_Test1 is
@@ -28,21 +31,6 @@ architecture behaviour of msi_Test1 is
 			Q      : out std_logic_vector(width-1 downto 0) );
 	end component;
 	
-	component FreqDiv is
-	port(
-		CLK : in std_logic;
-		FAC : in integer;
-		Q   : out std_logic);
-	end component;
-	
-	component pll1 is
-	port(
-		areset		: IN STD_LOGIC  := '0';
-		inclk0		: IN STD_LOGIC  := '0';
-		c0		      : OUT STD_LOGIC ;
-		locked		: OUT STD_LOGIC 
-	);
-	end component;
 
 	component FourDigits is
 	port(
@@ -56,24 +44,39 @@ architecture behaviour of msi_Test1 is
 	
 	signal cnt  : integer range 0 to 100;
 	signal cnt2 : integer range 0 to 100;
-	signal clk10k : std_logic;
+	
+	signal clk24M : std_logic;
+	signal clk1M  : std_logic;
+	signal clk1k  : std_logic;
 	signal clk100 : std_logic;
 	signal clk10  : std_logic;
+	signal clk48k : std_logic;
+	
+	signal mdat : signed(15 downto 0);
+	signal mout : signed(23 downto 0);
 begin
-	plla: pll1 port map(
+	plla: work.pll1 port map(
 		inclk0 => CLOCK_50,
-		c0     => clk10k
+		c0     => clk24M,
+		c1     => clk1M
 	);
 	
-	fd1 : FreqDiv port map(
-		CLK => clk10k,
+	fd1k : work.FreqDiv port map(
+		CLK => clk1M,
 		FAC => 1000,
-		Q   => clk10);
-		
-	fd2 : FreqDiv port map(
-		CLK => clk10k,
-		FAC => 100,
+		Q   => clk1k
+	);
+	
+	fd100 : work.FreqDiv port map(
+		CLK => clk1M,
+		FAC => 10000,
 		Q   => clk100);
+		
+	fd10 : work.FreqDiv port map(
+		CLK => clk1M,
+		FAC => 100000,
+		Q   => clk10);
+	
 	
 	sr1: ShiftReg generic map(
 		width => 18)
@@ -93,33 +96,45 @@ begin
 		H3 => HEX3
 	);
 	
-	process(clk10)
-	begin
-		if rising_edge(clk10) then
-			cnt <= cnt + 1;
-		end if;
-	end process;
+	-- process(clk10, SW)
+	-- begin
+	-- 	if rising_edge(clk10) then
+	-- 		cnt <= cnt + 1;
+	-- 	end if;
+	-- end process;
+	
+	cnt <= to_integer(unsigned(SW(6 downto 0)) );
 	
 	LEDG(0) <= clk10;
-	LEDG(1) <= clk10k;
+	LEDG(1) <= clk1M;
 	
+	LEDG(2) <= clk48k;
 	
-	process(clk10k)
-	begin
-		if rising_edge(clk10k) then
-			cnt2 <= cnt2 + 1;
-		end if;
-	end process;
+	-- AUDIO OUT --	
+	test_osc1 : entity work.test_osc
+	port map (
+		clk			=> clk24M,
+		tone        => cnt,
+		dout 			=> mout,
+		samp_clk    => clk48k,
+		outen			=> LEDG(3)
+	);
 	
-	LEDG(2) <=  '1' when (cnt2 < cnt) else '0';
-		
-	-- pwm1 : MyPWM generic map(
-	--	DIV => 100)
-	-- port map(
-	--	CLK => clk10k,
-	--	FAC => 50,
-	--	Q   => LEDG(2)
-	-- );
-
-	-- LEDG(7 downto 3) <= std_logic_vector(to_unsigned(cnt, 5));
+	aud_out : entity work.g00_audio_interface
+	port map (	
+		LDATA => mout,
+		RDATA	=> mout,
+		clk => clk24M,
+		rst => not KEY(0),
+		INIT => KEY(0),
+		W_EN => not KEY(1),
+		pulse_48KHz => clk48k, 		-- sample sync pulse
+		AUD_MCLK  => AUD_XCK,		-- codec master clock input
+		AUD_BCLK => AUD_BCLK,		-- digital audio bit clock
+		AUD_DACDAT => AUD_DACDAT,	-- DAC data lines
+		AUD_DACLRCK => AUD_DACLRCK, -- DAC data left/right select
+		I2C_SDAT => I2C_SDAT, 		-- serial interface data line
+		I2C_SCLK => I2C_SCLK			-- serial interface clock
+	);
+	
 end behaviour;

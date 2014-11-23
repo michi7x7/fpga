@@ -4,7 +4,7 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(EP4CE115F29) Path("C:/Users/user/Desktop/FPGA/output_files/") File("msi_Test1.sof") MfrSpec(OpMask(1));
+		Device PartName(EP4CE115F29) Path("D:/Programmieren/FPGA/fpga/output_files/") File("msi_Test1.sof") MfrSpec(OpMask(1));
 
 ChainEnd;
 

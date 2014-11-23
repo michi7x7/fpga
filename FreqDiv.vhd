@@ -9,20 +9,20 @@ port(
 end entity;
 
 architecture behaviour of FreqDiv is
-	signal cnt : integer;
+	signal cnt : integer := 0;
 	signal state : std_logic := '0';
 begin
 	process(CLK)
 	begin
 		if rising_edge(CLK) then
 			cnt <= cnt + 1;
+			
+			if cnt > FAC/2 then
+				cnt <= 0;
+				state <= not state;
+			end if;
 		end if;
 		
-		if cnt > FAC/2 then
-			cnt <= 0;
-			state <= not state;
-		end if;
+		Q <= state after 2ns;
 	end process;
-	
-	Q <= state;
 end behaviour;
