@@ -20,7 +20,7 @@
 ## PROGRAM "Quartus II"
 ## VERSION "Version 14.0.0 Build 200 06/17/2014 SJ Web Edition"
 
-## DATE    "Sat Nov 22 15:36:41 2014"
+## DATE    "Mon Nov 24 19:53:53 2014"
 
 ##
 ## DEVICE  "EP4CE115F29C7"
@@ -40,10 +40,6 @@ set_time_format -unit ns -decimal_places 3
 #**************************************************************
 
 create_clock -name {CLOCK_50} -period 20.000 -waveform { 0.000 10.000 } [get_ports {CLOCK_50}]
-create_clock -name {FreqDiv:fd10|cnt[0]} -period 1.000 -waveform { 0.000 0.500 } [get_registers {FreqDiv:fd10|cnt[0]}]
-create_clock -name {FreqDiv:fd1k|cnt[0]} -period 1.000 -waveform { 0.000 0.500 } [get_registers {FreqDiv:fd1k|cnt[0]}]
-create_clock -name {FreqDiv:fd100|cnt[10]} -period 1.000 -waveform { 0.000 0.500 } [get_registers {FreqDiv:fd100|cnt[10]}]
-create_clock -name {g00_audio_interface:aud_out|pulse_48KHz} -period 1.000 -waveform { 0.000 0.500 } [get_registers {g00_audio_interface:aud_out|pulse_48KHz}]
 
 
 #**************************************************************
@@ -66,52 +62,12 @@ create_generated_clock -name {plla|altpll_component|auto_generated|pll1|clk[1]} 
 
 set_clock_uncertainty -rise_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[1]}] -rise_to [get_clocks {plla|altpll_component|auto_generated|pll1|clk[1]}]  0.020  
 set_clock_uncertainty -rise_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[1]}] -fall_to [get_clocks {plla|altpll_component|auto_generated|pll1|clk[1]}]  0.020  
-set_clock_uncertainty -rise_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[1]}] -rise_to [get_clocks {FreqDiv:fd1k|cnt[0]}] -setup 0.110  
-set_clock_uncertainty -rise_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[1]}] -rise_to [get_clocks {FreqDiv:fd1k|cnt[0]}] -hold 0.080  
-set_clock_uncertainty -rise_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[1]}] -fall_to [get_clocks {FreqDiv:fd1k|cnt[0]}] -setup 0.110  
-set_clock_uncertainty -rise_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[1]}] -fall_to [get_clocks {FreqDiv:fd1k|cnt[0]}] -hold 0.080  
 set_clock_uncertainty -fall_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[1]}] -rise_to [get_clocks {plla|altpll_component|auto_generated|pll1|clk[1]}]  0.020  
 set_clock_uncertainty -fall_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[1]}] -fall_to [get_clocks {plla|altpll_component|auto_generated|pll1|clk[1]}]  0.020  
-set_clock_uncertainty -fall_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[1]}] -rise_to [get_clocks {FreqDiv:fd1k|cnt[0]}] -setup 0.110  
-set_clock_uncertainty -fall_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[1]}] -rise_to [get_clocks {FreqDiv:fd1k|cnt[0]}] -hold 0.080  
-set_clock_uncertainty -fall_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[1]}] -fall_to [get_clocks {FreqDiv:fd1k|cnt[0]}] -setup 0.110  
-set_clock_uncertainty -fall_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[1]}] -fall_to [get_clocks {FreqDiv:fd1k|cnt[0]}] -hold 0.080  
 set_clock_uncertainty -rise_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -rise_to [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}]  0.020  
 set_clock_uncertainty -rise_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -fall_to [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}]  0.020  
-set_clock_uncertainty -rise_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -rise_to [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -setup 0.110  
-set_clock_uncertainty -rise_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -rise_to [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -hold 0.080  
-set_clock_uncertainty -rise_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -fall_to [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -setup 0.110  
-set_clock_uncertainty -rise_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -fall_to [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -hold 0.080  
 set_clock_uncertainty -fall_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -rise_to [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}]  0.020  
 set_clock_uncertainty -fall_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -fall_to [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}]  0.020  
-set_clock_uncertainty -fall_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -rise_to [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -setup 0.110  
-set_clock_uncertainty -fall_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -rise_to [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -hold 0.080  
-set_clock_uncertainty -fall_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -fall_to [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -setup 0.110  
-set_clock_uncertainty -fall_from [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -fall_to [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -hold 0.080  
-set_clock_uncertainty -rise_from [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -rise_to [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -setup 0.080  
-set_clock_uncertainty -rise_from [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -rise_to [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -hold 0.110  
-set_clock_uncertainty -rise_from [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -fall_to [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -setup 0.080  
-set_clock_uncertainty -rise_from [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -fall_to [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -hold 0.110  
-set_clock_uncertainty -rise_from [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -rise_to [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}]  0.020  
-set_clock_uncertainty -rise_from [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -fall_to [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}]  0.020  
-set_clock_uncertainty -fall_from [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -rise_to [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -setup 0.080  
-set_clock_uncertainty -fall_from [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -rise_to [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -hold 0.110  
-set_clock_uncertainty -fall_from [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -fall_to [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -setup 0.080  
-set_clock_uncertainty -fall_from [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -fall_to [get_clocks {plla|altpll_component|auto_generated|pll1|clk[0]}] -hold 0.110  
-set_clock_uncertainty -fall_from [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -rise_to [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}]  0.020  
-set_clock_uncertainty -fall_from [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}] -fall_to [get_clocks {g00_audio_interface:aud_out|pulse_48KHz}]  0.020 
-set_clock_uncertainty -rise_from [get_clocks {FreqDiv:fd1k|cnt[0]}] -rise_to [get_clocks {FreqDiv:fd1k|cnt[0]}]  0.020  
-set_clock_uncertainty -rise_from [get_clocks {FreqDiv:fd1k|cnt[0]}] -fall_to [get_clocks {FreqDiv:fd1k|cnt[0]}]  0.020  
-set_clock_uncertainty -rise_from [get_clocks {FreqDiv:fd1k|cnt[0]}] -rise_to [get_clocks {FreqDiv:fd100|cnt[10]}]  0.020  
-set_clock_uncertainty -rise_from [get_clocks {FreqDiv:fd1k|cnt[0]}] -fall_to [get_clocks {FreqDiv:fd100|cnt[10]}]  0.020  
-set_clock_uncertainty -rise_from [get_clocks {FreqDiv:fd1k|cnt[0]}] -rise_to [get_clocks {FreqDiv:fd10|cnt[0]}]  0.020  
-set_clock_uncertainty -rise_from [get_clocks {FreqDiv:fd1k|cnt[0]}] -fall_to [get_clocks {FreqDiv:fd10|cnt[0]}]  0.020  
-set_clock_uncertainty -fall_from [get_clocks {FreqDiv:fd1k|cnt[0]}] -rise_to [get_clocks {FreqDiv:fd1k|cnt[0]}]  0.020  
-set_clock_uncertainty -fall_from [get_clocks {FreqDiv:fd1k|cnt[0]}] -fall_to [get_clocks {FreqDiv:fd1k|cnt[0]}]  0.020  
-set_clock_uncertainty -fall_from [get_clocks {FreqDiv:fd1k|cnt[0]}] -rise_to [get_clocks {FreqDiv:fd100|cnt[10]}]  0.020  
-set_clock_uncertainty -fall_from [get_clocks {FreqDiv:fd1k|cnt[0]}] -fall_to [get_clocks {FreqDiv:fd100|cnt[10]}]  0.020  
-set_clock_uncertainty -fall_from [get_clocks {FreqDiv:fd1k|cnt[0]}] -rise_to [get_clocks {FreqDiv:fd10|cnt[0]}]  0.020  
-set_clock_uncertainty -fall_from [get_clocks {FreqDiv:fd1k|cnt[0]}] -fall_to [get_clocks {FreqDiv:fd10|cnt[0]}]  0.020  
 
 
 #**************************************************************
