@@ -18,7 +18,7 @@ entity msi_Test1 is
 		HEX3 : out std_logic_vector(6 downto 0);
 		
 		AUD_ADCDAT,	AUD_ADCLRCK, AUD_BCLK, AUD_DACDAT, AUD_DACLRCK,	AUD_XCK : out std_logic;
-		I2C_SCLK, I2C_SDAT : out std_logic
+		I2C_SCLK, I2C_SDAT : buffer std_logic
 	);
 end entity;
 
@@ -88,8 +88,8 @@ begin
 	
 	-- 7-SEGMENT --
 	dig: FourDigits port map(
-		CLK => clk100,
-		N   => cnt,
+		CLK => clk24M,
+		N   => cnt2,
 		H0 => HEX0,
 		H1 => HEX1,
 		H2 => HEX2,
@@ -117,6 +117,7 @@ begin
 		tone        => cnt,
 		dout 			=> mout,
 		samp_clk    => clk48k,
+		en          => not KEY(2),
 		outen			=> LEDG(3)
 	);
 	
@@ -126,15 +127,20 @@ begin
 		RDATA	=> mout,
 		clk => clk24M,
 		rst => not KEY(0),
-		INIT => KEY(0),
-		W_EN => not KEY(1),
+		INIT => not KEY(1),
+		W_EN => not KEY(2),
 		pulse_48KHz => clk48k, 		-- sample sync pulse
 		AUD_MCLK  => AUD_XCK,		-- codec master clock input
 		AUD_BCLK => AUD_BCLK,		-- digital audio bit clock
 		AUD_DACDAT => AUD_DACDAT,	-- DAC data lines
 		AUD_DACLRCK => AUD_DACLRCK, -- DAC data left/right select
 		I2C_SDAT => I2C_SDAT, 		-- serial interface data line
-		I2C_SCLK => I2C_SCLK			-- serial interface clock
+		I2C_SCLK => I2C_SCLK,		-- serial interface clock
+		
+		word_countX => cnt2        -- debugging...
 	);
+	
+	LEDG(6) <= I2C_SDAT;
+	LEDG(7) <= I2C_SCLK;
 	
 end behaviour;

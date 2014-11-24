@@ -28,6 +28,7 @@ entity test_osc is
 	clk 		: in std_logic;
 	tone     : in integer range 0 to 127;
 	
+	en       : in std_logic := '0' ;
 	outen		: out std_logic;
 	
 	samp_clk	: in std_logic;
@@ -37,7 +38,7 @@ entity test_osc is
 end test_osc;
 
 architecture RTL of test_osc is
-	signal fcw 			: integer;
+	signal fcw 			: integer range 0 to 68506;
 	signal phase		: integer range 0 to 512*512; -- 512 is one sin, 512 for higher prec.
 	
 	
@@ -51,8 +52,6 @@ architecture RTL of test_osc is
 	type sinlut_type is array ( 0 to 127 ) of integer range 0 to 8387976;
 	constant sinlut : sinlut_type := (0,102941,205866,308761,411609,514395,617104,719720,822227,924610,1026855,1128944,1230864,1332598,1434132,1535449,1636536,1737376,1837954,1938255,2038265,2137968,2237348,2336392,2435084,2533409,2631353,2728900,2826036,2922747,3019018,3114834,3210181,3305044,3399410,3493264,3586592,3679379,3771613,3863278,3954362,4044850,4134729,4223986,4312606,4400577,4487885,4574517,4660460,4745702,4830229,4914028,4997087,5079394,5160936,5241701,5321676,5400850,5479210,5556746,5633444,5709294,5784285,5858404,5931641,6003985,6075424,6145949,6215548,6284211,6351928,6418688,6484481,6549298,6613129,6675963,6737793,6798607,6858398,6917156,6974872,7031538,7087145,7141684,7195149,7247529,7298818,7349008,7398091,7446060,7492908,7538627,7583211,7626653,7668947,7710085,7750063,7788873,7826510,7862969,7898244,7932329,7965219,7996910,8027397,8056675,8084739,8111586,8137211,8161611,8184782,8206720,8227423,8246886,8265107,8282084,8297813,8312293,8325521,8337495,8348214,8357675,8365878,8372821,8378503,8382923,8386081,8387976);
 	
-	-- Oscillator enable flag
-	signal en : std_logic := '0' ;
 begin
 	
 	outen <= en;
@@ -63,7 +62,6 @@ begin
 		if rising_edge(clk) then
 			-- get the FCW from the LUT
 			fcw <= fcwlut(tone);
-			en <= '1';
 		end if;
 	end process;		
 
@@ -96,12 +94,12 @@ begin
 					d := sinlut(phi);
 				end if;
 				
-				dout <= to_signed(d / 2, 24);
+				dout <= to_signed(d, 24);
 				
 				-- Output sawtooth, this has bad rounding but i don't care rn
 				-- dout <= phase;
 			else 
-				dout <= X"800000"; 
+				dout <= X"000000"; 
 			end if;
 		end if;
 	end process;

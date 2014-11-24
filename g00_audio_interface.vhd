@@ -28,7 +28,9 @@ ENTITY g00_audio_interface IS
 		AUD_DACDAT :           OUT std_logic; -- DAC data lines
 		AUD_DACLRCK :          OUT std_logic; -- DAC data left/right select
 		I2C_SDAT :             OUT std_logic; -- serial interface data line
-		I2C_SCLK :             OUT std_logic  -- serial interface clock
+		I2C_SCLK :             OUT std_logic; -- serial interface clock
+		
+		word_countX : out integer range 0 to 100
 	);
 END g00_audio_interface;
 
@@ -370,6 +372,9 @@ SCI_FSM: process (clk, rst)
 				end if; -- if clk_count
 			end case;
 		end if; -- if rst	
+		
+		
+	word_countX <= SCI_state2'pos(state2);
 	end process;
 	
 end a;
